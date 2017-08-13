@@ -1,0 +1,157 @@
+[
+    {
+        "id": "ab36b4ca.d5e278",
+        "type": "watch",
+        "z": "da05c083.a06a9",
+        "name": "",
+        "files": "/tmp/serial-ip.csv",
+        "recursive": "",
+        "x": 106.5,
+        "y": 196,
+        "wires": [
+            [
+                "7c0d0cd9.d0c174"
+            ]
+        ]
+    },
+    {
+        "id": "7c0d0cd9.d0c174",
+        "type": "file in",
+        "z": "da05c083.a06a9",
+        "name": "serial-ip",
+        "filename": "/tmp/serial-ip.csv",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "x": 264.5,
+        "y": 230,
+        "wires": [
+            [
+                "f89cc87d.d13e68"
+            ]
+        ]
+    },
+    {
+        "id": "f89cc87d.d13e68",
+        "type": "csv",
+        "z": "da05c083.a06a9",
+        "name": "",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "x": 374.5,
+        "y": 329,
+        "wires": [
+            [
+                "dc614209.9086d"
+            ]
+        ]
+    },
+    {
+        "id": "7db110b5.f89ad",
+        "type": "inject",
+        "z": "da05c083.a06a9",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 123.5,
+        "y": 270,
+        "wires": [
+            [
+                "7c0d0cd9.d0c174"
+            ]
+        ]
+    },
+    {
+        "id": "dc614209.9086d",
+        "type": "function",
+        "z": "da05c083.a06a9",
+        "name": "data",
+        "func": "global.set('mapping', msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 482.5,
+        "y": 419,
+        "wires": [
+            [
+                "e00067ca.e9ea28"
+            ]
+        ]
+    },
+    {
+        "id": "e00067ca.e9ea28",
+        "type": "debug",
+        "z": "da05c083.a06a9",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 798.5,
+        "y": 408,
+        "wires": []
+    },
+    {
+        "id": "8e1faec9.826d6",
+        "type": "http in",
+        "z": "da05c083.a06a9",
+        "name": "",
+        "url": "/device",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 123,
+        "y": 96,
+        "wires": [
+            [
+                "8d07018b.cb1b1"
+            ]
+        ]
+    },
+    {
+        "id": "8d07018b.cb1b1",
+        "type": "function",
+        "z": "da05c083.a06a9",
+        "name": "process",
+        "func": "var mapping = global.get('mapping');\n\nvar serials = msg.req.query.serial;\nvar res = {'ip': '', 'serial' : ''};\n// need to check if query is an array or\n// just single vlaue\nif ( !Array.isArray(serials))\n    serials=[serials];\nfor (var i=0; i<mapping.length; i++) {\n    for (var si=0; si < serials.length; si++){\n        if (mapping[i].serial === serials[si])\n            res = mapping[i];\n    }\n}\nmsg.payload=res;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 424.5,
+        "y": 169,
+        "wires": [
+            [
+                "90c5c656.ce37f8",
+                "8d8e3792.f63be8"
+            ]
+        ]
+    },
+    {
+        "id": "90c5c656.ce37f8",
+        "type": "debug",
+        "z": "da05c083.a06a9",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 650.5,
+        "y": 118,
+        "wires": []
+    },
+    {
+        "id": "8d8e3792.f63be8",
+        "type": "http response",
+        "z": "da05c083.a06a9",
+        "name": "output",
+        "statusCode": "200",
+        "headers": {},
+        "x": 721,
+        "y": 317,
+        "wires": []
+    }
+]
