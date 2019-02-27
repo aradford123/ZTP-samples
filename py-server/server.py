@@ -16,9 +16,9 @@ def get_all():
 
         # this is a list
         serials = request.args.getlist('serial')
-        #print("serial:{}".format(serials))
+        print("serial:{}".format(serials))
 
-        if serials is None:
+        if serials == []:
             return jsonify({"error:" : "No serial provided as query param (?serial=aaa)"}), 404
         for serial in serials:
             try:
