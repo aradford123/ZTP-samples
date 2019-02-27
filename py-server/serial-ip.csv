@@ -1,0 +1,3 @@
+serial,ip,netmask,gw,config_url
+WWWWW,1.1.1.1,255.255.255.0,1.1.1.0,http://test/config_file
+BBBB,3.3.2.9,255.255.255.0,3.3.2.1,
